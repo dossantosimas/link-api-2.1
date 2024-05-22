@@ -1,0 +1,13 @@
+name: ibisa-edge
+services:
+  influxdb:
+    image: influxdb
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+    env_file:
+      - ./start/influx.env
+    volumes:
+      - ./influxdb2-data:/var/lib/influxdb2
+      - ./influxdb2-config:/etc/influxdb2
+    restart: always

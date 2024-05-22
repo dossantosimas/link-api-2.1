@@ -1,4 +1,4 @@
-const { execSync } = require('child_process');
+const { execSync, ex } = require('child_process');
 import { getOS } from "../utils/so";
 import { Commands } from "../utils/commands";
 

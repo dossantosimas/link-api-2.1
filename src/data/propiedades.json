@@ -1,0 +1,50 @@
+[
+  {
+    "propiedad": "Broker",
+    "valor_propiedad": "mosquitto"
+  },
+  {
+    "propiedad": "Puerto broker",
+    "valor_propiedad": "8883"
+  },
+  {
+    "propiedad": "Serial",
+    "valor_propiedad": "888888"
+  },
+  {
+    "propiedad": "Tamano maximo muestras (Bytes)",
+    "valor_propiedad": "250000000"
+  },
+  {
+    "propiedad": "Cantidad maxima muestras",
+    "valor_propiedad": "750000"
+  },
+  {
+    "propiedad": "Tamano maximo logs (Bytes)",
+    "valor_propiedad": "100000000"
+  },
+  {
+    "propiedad": "Factor de vigencia",
+    "valor_propiedad": "10"
+  },
+  {
+    "propiedad": "Certificado",
+    "valor_propiedad": "888888.crt"
+  },
+  {
+    "propiedad": "Llave",
+    "valor_propiedad": "888888.key"
+  },
+  {
+    "propiedad": "Tenant",
+    "valor_propiedad": "colombina_p"
+  },
+  {
+    "propiedad": "kapacitor",
+    "valor_propiedad": "influxdb-docker"
+  },
+  {
+    "propiedad": "Tailscale",
+    "valor_propiedad": "link2-desarrollo"
+  }
+]

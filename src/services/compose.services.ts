@@ -1,13 +1,20 @@
 const { execSync } = require('child_process');
+import { getOS } from "../utils/so";
+import { Commands } from "../utils/commands";
 
 class DockerComposeServices {
-  private readonly run_compose_servicio = (servicio: string) =>
-    `sudo docker compose -d ${servicio}`;
-
   async InstallServicio(servicio: string): Promise<boolean> {
     try {
-      const resultado = execSync('ls').toString();
-      console.log(`Resultado:\n${resultado}`);
+
+        const OS = getOS()
+        let result
+        if(OS === "L"){
+            result = execSync(Commands.linux.run_compose_servicio(servicio)).toString()
+            console.log(`Resultado:\n${result}`);
+            return true
+        }
+    //   const resultado = execSync().toString();
+    //   console.log(`Resultado:\n${resultado}`);
 
       return true;
     } catch (error) {

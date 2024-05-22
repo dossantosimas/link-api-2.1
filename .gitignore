@@ -1,5 +1,6 @@
 # Created by https://www.toptal.com/developers/gitignore/api/windows,node,macos,linux
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,node,macos,linux
+token.txt
 
 ### Linux ###
 *~

@@ -5,6 +5,7 @@ import { IExecId, IDockerContainer } from '../models/docker.model';
 class DockerAPIServices {
   async ListaContenedores(): Promise<IDockerContainer[] | null> {
     try {
+        console.log('URL:', Commands.api_docker.host + Commands.api_docker.list)
       const response = await fetch(
         Commands.api_docker.host + Commands.api_docker.list
       );

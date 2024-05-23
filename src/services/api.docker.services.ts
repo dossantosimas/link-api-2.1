@@ -54,7 +54,6 @@ class DockerAPIServices {
       );
 
       const data = await response.json();
-
       return data;
     } catch (error) {
       console.error('ExecId:', error);

@@ -6,12 +6,15 @@ export async function InstallComponents(req: Request, res: Response) {
   try {
     console.log('llego a Install');
     let token
+    let influx_install: boolean = false
+
     //ejecutar docker compose para instalar influxdb
-    const result = await DockerCompose.InstallServicio('influxdb');
-    if (!result) res.status(500).json({ msg: 'No se pudo instalar influxdb' });
+    const dc_influx = await DockerCompose.InstallServicio('influxdb');
+    if (!dc_influx) res.status(500).json({ msg: 'No se pudo instalar influxdb' });
 
     //obtener contenedor influxdb
     const cont_influxdb = await DockerAPI.GetContenedor('influxdb');
+
     if (!cont_influxdb)
       res.status(500).json({ msg: 'No se encontro contenedor influxdb' });
     else {
@@ -22,8 +25,7 @@ export async function InstallComponents(req: Request, res: Response) {
         AttachStderr: true,
         Cmd: ['influx', 'auth', 'list'],
         Tty: false,
-      };
-
+      };  
       //obtener ID de exec
       const exec_id = await DockerAPI.ExecId(cont_influxdb.Id, exec_body);
 
@@ -32,18 +34,28 @@ export async function InstallComponents(req: Request, res: Response) {
       } else {
         //ejecutar exec con ID
         const exec_start = await DockerAPI.RunExec(exec_id.Id)
-
+        console.log('exec_start', exec_start)
         //obtener token de influxdb
         if(exec_start){
           let lines = exec_start.split('\n');
           let tokenLine = lines[1];
           token = tokenLine.split(/\s+/)[3];
-          res.json({ token: token });
+
+          influx_install = true
+          // res.json({ token: token });
         }
       }
     }
 
-    res.json({ success: true });
+
+    if(!influx_install) res.status(500).json({ msg: 'No se pudo instalar influxdb' });
+
+
+    //ejecutar docker compose para instalar telegraf
+    const dc_telegraf = await DockerCompose.InstallServicio('telegraf');
+    if (!dc_telegraf) res.status(500).json({ msg: 'No se pudo instalar telegraf' });
+
+    res.json({ token: token });
   } catch (error) {
     res.status(500).json({ msg: 'Error en el API', error: error });
   }

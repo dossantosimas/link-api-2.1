@@ -11,3 +11,15 @@ services:
       - ./influxdb2-data:/var/lib/influxdb2
       - ./influxdb2-config:/etc/influxdb2
     restart: always
+
+  telegraf:
+    container_name: telegraf
+    image: telegraf
+#    env_file:
+#      - ./variables/telegraf.env
+    volumes:
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf
+    links:
+      - influxdb:influxdb
+    restart: always
+

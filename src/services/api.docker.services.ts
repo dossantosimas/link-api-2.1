@@ -20,6 +20,7 @@ class DockerAPIServices {
   async GetContenedor(name: string): Promise<IDockerContainer | null> {
     try {
       const lista = await this.ListaContenedores();
+      console.log('LISTA CONTENEDORES', lista)
 
       if (lista) {
         const container_influxdb = lista.find(

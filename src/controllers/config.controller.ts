@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { DockerCompose } from '../services/compose.services';
 import { DockerAPI } from '../services/api.docker.services';
+import { ComandoLocales } from '../services/comandos.services';
+import { Telegraf } from '../services/telegraf.services';
 
 export async function InstallComponents(req: Request, res: Response) {
   try {
@@ -54,6 +56,15 @@ export async function InstallComponents(req: Request, res: Response) {
     //ejecutar docker compose para instalar telegraf
     const dc_telegraf = await DockerCompose.InstallServicio('telegraf');
     if (!dc_telegraf) res.status(500).json({ msg: 'No se pudo instalar telegraf' });
+
+    //conseder permiso para telegraf
+    const run_permissions = await ComandoLocales.Run('sudo chmod +w $PWD/docker/telegraf/telegraf.conf')
+    if(!run_permissions) res.status(500).json({ msg: 'No se pudo dar permiso a telegraf.conf' });
+
+    //generar archivo de configuracion
+    const create_telegraf_conf = await Telegraf.CreateConfFile()
+    if(!create_telegraf_conf) res.status(500).json({ msg: 'No se pudo dar crear telegraf.conf' });
+
 
     res.json({ token: token });
   } catch (error) {

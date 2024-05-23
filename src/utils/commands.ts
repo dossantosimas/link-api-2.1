@@ -1,5 +1,13 @@
 export const Commands = {
-    linux: {
-        run_compose_servicio: (servicio: string) => `sudo docker compose -f /home/ibisa/Escritorio/installer3/docker/docker-compose.yaml up -d ${servicio}`
-    }
-}
+  linux: {
+    run_compose_servicio: (servicio: string) =>
+      `sudo docker compose -f /home/ibisa/Escritorio/installer3/docker/docker-compose.yaml up -d ${servicio}`,
+  },
+
+  api_docker: {
+    host: 'http://0.0.0.0:2375/',
+    list: '/container/json',
+    exec_id: (docker_id: string) => `/container/${docker_id}/exec`,
+    exec_start: (exec_id: string) => `/exec/${exec_id}/start`,
+  },
+};

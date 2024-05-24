@@ -63,6 +63,10 @@ class DockerAPIServices {
 
   async RunExec(exec_id: string): Promise<string | null> {
     try {
+      console.log(
+        'URL:',
+        Commands.api_docker.host + Commands.api_docker.exec_start(exec_id)
+      );
       const response = await fetch(
         Commands.api_docker.host + Commands.api_docker.exec_start(exec_id),
         {
@@ -70,7 +74,7 @@ class DockerAPIServices {
         }
       );
       const data = await response.text();
-      console.log('RunExec:', data)
+      console.log('RunExec:', data);
 
       return data;
     } catch (error) {

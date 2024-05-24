@@ -70,6 +70,7 @@ class DockerAPIServices {
         }
       );
       const data = await response.text();
+      console.log('RunExec:', data)
 
       return data;
     } catch (error) {

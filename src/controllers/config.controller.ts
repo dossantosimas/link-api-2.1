@@ -32,6 +32,7 @@ export async function InstallComponents(req: Request, res: Response) {
         Tty: false,
       };  
       //obtener ID de exec
+      console.log('Sacando Token')
       const exec_id = await DockerAPI.ExecId(cont_influxdb.Id, exec_body);
 
       if(!exec_id){
@@ -45,7 +46,7 @@ export async function InstallComponents(req: Request, res: Response) {
           let lines = exec_start.split('\n');
           let tokenLine = lines[1];
           token = tokenLine.split(/\s+/)[3];
-
+          console.log('TOKEN:', token)
           influx_install = true
           await updateEnvVar('INFLUXDB_TOKEN', token, '../../docker/start/telegraf.env')
           // res.json({ token: token });

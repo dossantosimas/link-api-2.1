@@ -32,39 +32,37 @@ export async function InstallComponents(req: Request, res: Response) {
         Cmd: ['influx', 'auth', 'list'],
         Tty: false,
       };
-      //obtener ID de exec
-      console.log('Sacando Token');
-      const exec_id = await DockerAPI.ExecId(cont_influxdb.Id, exec_body);
 
-      if (!exec_id) {
-        res.status(500).json({ msg: 'No se genero ID para exec' });
-      } else {
-        //ejecutar exec con ID
-        let exec_start = null;
-        let attempts = 0;
+      let exec_start = null;
+      let attempts = 0;
 
-        while (exec_start === null && attempts < 5) {
+      while (exec_start === null && attempts < 5) {
+        let exec_id = await DockerAPI.ExecId(cont_influxdb.Id, exec_body);
+
+        if (exec_id) {
           exec_start = await DockerAPI.RunExec(exec_id.Id);
           attempts++;
           if (exec_start === null) {
             console.log(`Intento ${attempts} falló, reintentando...`);
           }
-        }
-
-        if (exec_start !== null) {
-          let lines = exec_start.split('\n');
-          let tokenLine = lines[1];
-          token = tokenLine.split(/\s+/)[3];
-          console.log('TOKEN:', token);
-          influx_install = true;
-          await updateEnvVar(
-            'INFLUXDB_TOKEN',
-            token,
-            '../../docker/start/telegraf.env'
-          );
         } else {
-          res.status(500).json({ msg: 'Influx no entrega TOKEN' });
+          console.log(`Intento ${attempts} falló, reintentando...`);
         }
+      }
+
+      if (exec_start !== null) {
+        let lines = exec_start.split('\n');
+        let tokenLine = lines[1];
+        token = tokenLine.split(/\s+/)[3];
+        console.log('TOKEN:', token);
+        influx_install = true;
+        await updateEnvVar(
+          'INFLUXDB_TOKEN',
+          token,
+          '../../docker/start/telegraf.env'
+        );
+      } else {
+        res.status(500).json({ msg: 'Influx no entrega TOKEN' });
       }
     }
 

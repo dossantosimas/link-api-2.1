@@ -15,8 +15,8 @@ services:
   telegraf:
     container_name: telegraf
     image: telegraf
-#    env_file:
-#      - ./variables/telegraf.env
+    env_file:
+      - ./start/telegraf.env
     volumes:
       - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:rw
     links:

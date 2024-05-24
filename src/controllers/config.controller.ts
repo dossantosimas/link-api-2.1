@@ -1,6 +1,9 @@
 import { Request, Response } from 'express';
 import { DockerCompose } from '../services/compose.services';
 import { DockerAPI } from '../services/api.docker.services';
+
+import { updateEnvVar } from '../utils/variables';
+
 import { ComandoLocales } from '../services/comandos.services';
 import { Telegraf } from '../services/telegraf.services';
 
@@ -44,16 +47,21 @@ export async function InstallComponents(req: Request, res: Response) {
           token = tokenLine.split(/\s+/)[3];
 
           influx_install = true
+          await updateEnvVar('INFLUXDB_TOKEN', token, '../../docker/start/telegraf.env')
           // res.json({ token: token });
         }
       }
     }
 
+    
 
     if(!influx_install) res.status(500).json({ msg: 'No se pudo instalar influxdb' });
-
+    
 
     //ejecutar docker compose para instalar telegraf
+
+
+
     const dc_telegraf = await DockerCompose.InstallServicio('telegraf');
     if (!dc_telegraf) res.status(500).json({ msg: 'No se pudo instalar telegraf' });
 

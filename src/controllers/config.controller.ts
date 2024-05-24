@@ -10,12 +10,13 @@ import { Telegraf } from '../services/telegraf.services';
 export async function InstallComponents(req: Request, res: Response) {
   try {
     console.log('llego a Install');
-    let token
-    let influx_install: boolean = false
+    let token;
+    let influx_install: boolean = false;
 
     //ejecutar docker compose para instalar influxdb
     const dc_influx = await DockerCompose.InstallServicio('influxdb');
-    if (!dc_influx) res.status(500).json({ msg: 'No se pudo instalar influxdb' });
+    if (!dc_influx)
+      res.status(500).json({ msg: 'No se pudo instalar influxdb' });
 
     //obtener contenedor influxdb
     const cont_influxdb = await DockerAPI.GetContenedor('influxdb');
@@ -30,41 +31,51 @@ export async function InstallComponents(req: Request, res: Response) {
         AttachStderr: true,
         Cmd: ['influx', 'auth', 'list'],
         Tty: false,
-      };  
+      };
       //obtener ID de exec
-      console.log('Sacando Token')
+      console.log('Sacando Token');
       const exec_id = await DockerAPI.ExecId(cont_influxdb.Id, exec_body);
 
-      if(!exec_id){
+      if (!exec_id) {
         res.status(500).json({ msg: 'No se genero ID para exec' });
       } else {
         //ejecutar exec con ID
-        const exec_start = await DockerAPI.RunExec(exec_id.Id)
-        console.log('exec_start', exec_start)
-        //obtener token de influxdb
-        if(exec_start){
+        let exec_start = null;
+        let attempts = 0;
+
+        while (exec_start === null && attempts < 5) {
+          exec_start = await DockerAPI.RunExec(exec_id.Id);
+          attempts++;
+          if (exec_start === null) {
+            console.log(`Intento ${attempts} falló, reintentando...`);
+          }
+        }
+
+        if (exec_start !== null) {
           let lines = exec_start.split('\n');
           let tokenLine = lines[1];
           token = tokenLine.split(/\s+/)[3];
-          console.log('TOKEN:', token)
-          influx_install = true
-          await updateEnvVar('INFLUXDB_TOKEN', token, '../../docker/start/telegraf.env')
-          // res.json({ token: token });
+          console.log('TOKEN:', token);
+          influx_install = true;
+          await updateEnvVar(
+            'INFLUXDB_TOKEN',
+            token,
+            '../../docker/start/telegraf.env'
+          );
+        } else {
+          res.status(500).json({ msg: 'Influx no entrega TOKEN' });
         }
       }
     }
 
-    
-
-    if(!influx_install) res.status(500).json({ msg: 'No se pudo instalar influxdb' });
-    
+    if (!influx_install)
+      res.status(500).json({ msg: 'No se pudo instalar influxdb' });
 
     //ejecutar docker compose para instalar telegraf
 
-
-
     const dc_telegraf = await DockerCompose.InstallServicio('telegraf');
-    if (!dc_telegraf) res.status(500).json({ msg: 'No se pudo instalar telegraf' });
+    if (!dc_telegraf)
+      res.status(500).json({ msg: 'No se pudo instalar telegraf' });
 
     // //conseder permiso para telegraf
     // const run_permissions = await ComandoLocales.Run('sudo chmod +w $PWD/docker/telegraf/telegraf.conf')
@@ -73,7 +84,6 @@ export async function InstallComponents(req: Request, res: Response) {
     // //generar archivo de configuracion
     // const create_telegraf_conf = await Telegraf.CreateConfFile()
     // if(!create_telegraf_conf) res.status(500).json({ msg: 'No se pudo dar crear telegraf.conf' });
-
 
     res.json({ token: token });
   } catch (error) {

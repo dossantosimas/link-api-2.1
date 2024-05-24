@@ -7,6 +7,8 @@ import { updateEnvVar } from '../utils/variables';
 import { ComandoLocales } from '../services/comandos.services';
 import { Telegraf } from '../services/telegraf.services';
 
+import { sleep } from '../utils/time';
+
 export async function InstallComponents(req: Request, res: Response) {
   try {
     console.log('llego a Install');
@@ -18,25 +20,21 @@ export async function InstallComponents(req: Request, res: Response) {
     if (!dc_influx)
       res.status(500).json({ msg: 'No se pudo instalar influxdb' });
 
-    //obtener contenedor influxdb
-    const cont_influxdb = await DockerAPI.GetContenedor('influxdb');
+    let exec_start = null;
+    let attempts = 0;
 
-    if (!cont_influxdb)
-      res.status(500).json({ msg: 'No se encontro contenedor influxdb' });
-    else {
-      //body para exec
-      const exec_body = {
-        AttachStdin: false,
-        AttachStdout: true,
-        AttachStderr: true,
-        Cmd: ['influx', 'auth', 'list'],
-        Tty: false,
-      };
+    const exec_body = {
+      AttachStdin: false,
+      AttachStdout: true,
+      AttachStderr: true,
+      Cmd: ['influx', 'auth', 'list'],
+      Tty: false,
+    };
 
-      let exec_start = null;
-      let attempts = 0;
+    while (exec_start === null && attempts < 5) {
+      const cont_influxdb = await DockerAPI.GetContenedor('influxdb');
 
-      while (exec_start === null && attempts < 5) {
+      if (cont_influxdb && cont_influxdb.State === 'running') {
         let exec_id = await DockerAPI.ExecId(cont_influxdb.Id, exec_body);
 
         if (exec_id) {
@@ -48,22 +46,26 @@ export async function InstallComponents(req: Request, res: Response) {
         } else {
           console.log(`Intento ${attempts} falló, reintentando...`);
         }
+
+        if (exec_start !== null) {
+          let lines = exec_start.split('\n');
+          let tokenLine = lines[1];
+          token = tokenLine.split(/\s+/)[3];
+          console.log('TOKEN:', token);
+          influx_install = true;
+          await updateEnvVar(
+            'INFLUXDB_TOKEN',
+            token,
+            '../../docker/start/telegraf.env'
+          );
+        } else {
+          res.status(500).json({ msg: 'Influx no entrega TOKEN' });
+        }
+      } else {
+        console.log(`Intento ${attempts} falló, reintentando...`);
       }
 
-      if (exec_start !== null) {
-        let lines = exec_start.split('\n');
-        let tokenLine = lines[1];
-        token = tokenLine.split(/\s+/)[3];
-        console.log('TOKEN:', token);
-        influx_install = true;
-        await updateEnvVar(
-          'INFLUXDB_TOKEN',
-          token,
-          '../../docker/start/telegraf.env'
-        );
-      } else {
-        res.status(500).json({ msg: 'Influx no entrega TOKEN' });
-      }
+      await sleep(4000);
     }
 
     if (!influx_install)

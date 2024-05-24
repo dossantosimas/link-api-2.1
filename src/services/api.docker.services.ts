@@ -74,12 +74,14 @@ class DockerAPIServices {
         }
       );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      console.log('RunExec:', response);
 
       const data = await response.text();
       console.log('RunExec:', data);
+
+      if (data.includes('connection refused')) {
+        return null;
+      }
 
       return data;
     } catch (error) {

@@ -139,7 +139,7 @@ export async function InstallComponents(req: Request, res: Response) {
         if (exec_id) {
           exec_start = await DockerAPI.RunExec(exec_id.Id);
 
-          if (exec_start) {
+          if (exec_start && exec_start !== 'aError: could not find authorization with given parameters: 401 Unauthorized: unauthorized access') {
             console.log('RESULTADO:', exec_start);
             while_ok = true;
           }

@@ -145,6 +145,15 @@ export async function InstallComponents(req: Request, res: Response) {
               'aError: could not find authorization with given parameters: 401 Unauthorized: unauthorized access'
           ) {
             // console.log('RESULTADO:', exec_start);
+            let lines = exec_start.split('\n');
+            let tokenLine = lines[1];
+            token = tokenLine.split(/\s+/)[3];
+            console.log('TOKEN:', token);
+            await updateEnvVar(
+              'INFLUXDB_TOKEN',
+              token,
+              '../../docker/start/telegraf.env'
+            );
             while_ok = true;
           }
         }

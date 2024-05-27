@@ -130,6 +130,7 @@ export async function InstallComponents(req: Request, res: Response) {
     };
 
     // Tiempo de espera para que arranque influxdb
+    console.log('> Esperando Influxdb Arranque');
     await sleep(6000);
 
     while (!while_ok && intentos < 5) {
@@ -169,13 +170,32 @@ export async function InstallComponents(req: Request, res: Response) {
       }
     }
 
+    console.log('> Instalando Telegraf...');
     const dc_telegraf = await DockerCompose.InstallServicio('telegraf');
     if (!dc_telegraf)
       res.status(500).json({ msg: 'No se pudo instalar telegraf' });
+    console.log('> Telegraf instalado');
 
+    console.log('> Instalando Kapacitor...');
     const dc_kapacitor = await DockerCompose.InstallServicio('kapacitor');
     if (!dc_kapacitor)
       res.status(500).json({ msg: 'No se pudo instalar kapacitor' });
+    console.log('> Kapacitor instalado');
+
+
+    await ComandoLocales.Run('sudo chmod +777 $PWD/docker/kapacitor/kapacitor.conf')
+    await ComandoLocales.Run('sudo chmod +777 $PWD/docker/kapacitorLib')
+    await ComandoLocales.Run('sudo chmod +777 $PWD/docker/kapacitorTikc')
+    await ComandoLocales.Run('sudo chmod +777 $PWD/docker/kapacitorTikc')
+
+    let cont_telegraf = await DockerAPI.GetContenedor('telegraf');
+    let cont_kapacitor = await DockerAPI.GetContenedor('kapacitor');
+
+    if(cont_telegraf)
+      await DockerAPI.ResetContainer(cont_telegraf.Id)
+
+    if(cont_kapacitor)
+      await DockerAPI.ResetContainer(cont_kapacitor.Id)
 
     res.json({ msg: 'Se instalo correctamente InfluxDB - Telegraf - Kapacitor' });
   } catch (error) {

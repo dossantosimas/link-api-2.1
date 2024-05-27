@@ -10,5 +10,8 @@ export const Commands = {
     list: '/containers/json',
     exec_id: (docker_id: string) => `/containers/${docker_id}/exec`,
     exec_start: (exec_id: string) => `/exec/${exec_id}/start`,
+    container: {
+      restart: (container_id: string) => `/containers/${container_id}/restart`,
+    }
   }
 };

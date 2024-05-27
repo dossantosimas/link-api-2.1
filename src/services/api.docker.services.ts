@@ -89,6 +89,23 @@ class DockerAPIServices {
       return null;
     }
   }
+
+  async ResetContainer(contenedor_id: string): Promise<boolean | null> {
+    try {
+      const response = await fetch(
+        Commands.api_docker.host + Commands.api_docker.container.restart(contenedor_id),
+        {
+          method: 'POST',
+        }
+      );
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('ResetContainer:', error);
+      return null;
+    }
+  }
 }
 
 export const DockerAPI = new DockerAPIServices();

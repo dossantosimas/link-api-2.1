@@ -173,7 +173,11 @@ export async function InstallComponents(req: Request, res: Response) {
     if (!dc_telegraf)
       res.status(500).json({ msg: 'No se pudo instalar telegraf' });
 
-    res.json({ token: 'se ejecuto todo bien' });
+    const dc_kapacitor = await DockerCompose.InstallServicio('kapacitor');
+    if (!dc_kapacitor)
+      res.status(500).json({ msg: 'No se pudo instalar kapacitor' });
+
+    res.json({ msg: 'Se instalo correctamente InfluxDB - Telegraf - Kapacitor' });
   } catch (error) {
     res.status(500).json({ msg: 'Error en el API', error: error });
   }

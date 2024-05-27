@@ -30,13 +30,10 @@ services:
       - "9092:9092"
     env_file:
       - ./start/telegraf.env
-    # volumes:
-    #    - ./kapacitor:/var/lib/kapacitor
-    #    - ./kapacitorConf/kapacitor.conf:/etc/kapacitor/kapacitor.conf:ro
-#      - ./data_kapacitor:/var/lib/kapacitor:rw
-#      - ./kapacitor.conf:/etc/kapacitor/kapacitor.conf
-#      - ./kapacitor:/home/kapacitor
-#      - ./tasks_kapacitor:/home/kapacitor/tasks:rw
+    volumes:
+       - ./kapacitorLib:/var/lib/kapacitor
+       - ./kapacitor/kapacitor.conf:/etc/kapacitor/kapacitor.conf:ro
+       - ./kapacitorTick:/home/kapacitor
     restart: always
     
 

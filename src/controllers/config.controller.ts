@@ -139,18 +139,30 @@ export async function InstallComponents(req: Request, res: Response) {
         if (exec_id) {
           exec_start = await DockerAPI.RunExec(exec_id.Id);
 
-          if (exec_start && exec_start !== 'aError: could not find authorization with given parameters: 401 Unauthorized: unauthorized access') {
-            console.log('RESULTADO:', exec_start);
+          if (
+            exec_start &&
+            exec_start !==
+              'aError: could not find authorization with given parameters: 401 Unauthorized: unauthorized access'
+          ) {
+            // console.log('RESULTADO:', exec_start);
             while_ok = true;
           }
         }
       }
 
-      intentos++;
-      console.log(`Intento ${intentos} falló, reintentando...`);
-      // Tiempo de espera para que arranque influxdb
-      await sleep(4000);
+      if (!while_ok) {
+        intentos++;
+        console.log(`Intento ${intentos} falló, reintentando...`);
+        // Tiempo de espera para que arranque influxdb
+        await sleep(4000);
+      } else {
+        console.log('> Influxdb instalado');
+      }
     }
+
+    const dc_telegraf = await DockerCompose.InstallServicio('telegraf');
+    if (!dc_telegraf)
+      res.status(500).json({ msg: 'No se pudo instalar telegraf' });
 
     res.json({ token: 'se ejecuto todo bien' });
   } catch (error) {

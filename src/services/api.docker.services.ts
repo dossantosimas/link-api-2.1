@@ -74,10 +74,10 @@ class DockerAPIServices {
         }
       );
 
-      console.log('RunExec:', response);
+      // console.log('RunExec:', response);
 
       const data = await response.text();
-      console.log('RunExec:', data);
+      // console.log('RunExec:', data);
 
       if (data.includes('connection refused')) {
         return null;

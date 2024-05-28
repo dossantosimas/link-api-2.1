@@ -99,8 +99,8 @@ class DockerAPIServices {
         }
       );
 
-      const data = await response.json();
-      return data;
+      // const data = await response.json();
+      return true;
     } catch (error) {
       console.error('ResetContainer:', error);
       return null;

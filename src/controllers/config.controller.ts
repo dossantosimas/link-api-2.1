@@ -179,7 +179,7 @@ export async function InstallComponents(req: Request, res: Response) {
       AttachStdin: false,
       AttachStdout: true,
       AttachStderr: true,
-      Cmd: ['influxd', '--http-bind-address', 'http://influxdb:8086'],
+      Cmd: ['influxd', '--http-bind-address', ':8086'],
       Tty: false,
     };
 
@@ -207,7 +207,7 @@ export async function InstallComponents(req: Request, res: Response) {
     console.log('> Kapacitor instalado');
 
     console.log('> Instalando Chronograf...');
-    const dc_chronograf = await DockerCompose.InstallServicio('kapacitor');
+    const dc_chronograf = await DockerCompose.InstallServicio('chronograf');
     if (!dc_chronograf)
       res.status(500).json({ msg: 'No se pudo instalar chronograf' });
     console.log('> Chronograf instalado');

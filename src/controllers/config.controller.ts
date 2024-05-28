@@ -121,7 +121,7 @@ export async function InstallComponents(req: Request, res: Response) {
     let exec_id: IExecId | null;
     let exec_start: string | null;
 
-    const exec_body = {
+    const exec_body_auth = {
       AttachStdin: false,
       AttachStdout: true,
       AttachStderr: true,
@@ -135,7 +135,7 @@ export async function InstallComponents(req: Request, res: Response) {
 
     while (!while_ok && intentos < 5) {
       if (cont_influxdb) {
-        exec_id = await DockerAPI.ExecId(cont_influxdb.Id, exec_body);
+        exec_id = await DockerAPI.ExecId(cont_influxdb.Id, exec_body_auth);
 
         if (exec_id) {
           exec_start = await DockerAPI.RunExec(exec_id.Id);
@@ -175,6 +175,23 @@ export async function InstallComponents(req: Request, res: Response) {
       }
     }
 
+    const exec_body_url = {
+      AttachStdin: false,
+      AttachStdout: true,
+      AttachStderr: true,
+      Cmd: ['influxd', '--http-bind-address', 'http://influxdb:8086'],
+      Tty: false,
+    };
+
+    console.log('> Configurando URL de Influxdb...');
+    if (cont_influxdb) {
+      exec_id = await DockerAPI.ExecId(cont_influxdb.Id, exec_body_url);
+      if (exec_id) {
+        exec_start = await DockerAPI.RunExec(exec_id.Id);
+      }
+    }
+
+    // influxd --http-bind-address <custom-domain>:<custom-port>
     // await ComandoLocales.Run('sudo chmod +777 $PWD/docker/kapacitorTick')
 
     console.log('> Instalando Telegraf...');
@@ -189,22 +206,31 @@ export async function InstallComponents(req: Request, res: Response) {
       res.status(500).json({ msg: 'No se pudo instalar kapacitor' });
     console.log('> Kapacitor instalado');
 
+    console.log('> Instalando Chronograf...');
+    const dc_chronograf = await DockerCompose.InstallServicio('kapacitor');
+    if (!dc_chronograf)
+      res.status(500).json({ msg: 'No se pudo instalar chronograf' });
+    console.log('> Chronograf instalado');
 
-    await ComandoLocales.Run('sudo chmod +777 $PWD/docker/kapacitor/kapacitor.conf')
-    await ComandoLocales.Run('sudo chmod +777 $PWD/docker/kapacitorLib')
-    await ComandoLocales.Run('sudo chmod +777 $PWD/docker/kapacitorTick')
-
+    await ComandoLocales.Run(
+      'sudo chmod +777 $PWD/docker/kapacitor/kapacitor.conf'
+    );
+    await ComandoLocales.Run('sudo chmod +777 $PWD/docker/kapacitorLib');
+    await ComandoLocales.Run('sudo chmod +777 $PWD/docker/kapacitorTick');
 
     let cont_telegraf = await DockerAPI.GetContenedor('telegraf');
     let cont_kapacitor = await DockerAPI.GetContenedor('kapacitor');
+    let cont_chronograf = await DockerAPI.GetContenedor('chronograf');
 
-    if(cont_telegraf)
-      await DockerAPI.ResetContainer(cont_telegraf.Id)
+    if (cont_telegraf) await DockerAPI.ResetContainer(cont_telegraf.Id);
 
-    if(cont_kapacitor)
-      await DockerAPI.ResetContainer(cont_kapacitor.Id)
+    if (cont_kapacitor) await DockerAPI.ResetContainer(cont_kapacitor.Id);
 
-    res.json({ msg: 'Se instalo correctamente InfluxDB - Telegraf - Kapacitor' });
+    if (cont_chronograf) await DockerAPI.ResetContainer(cont_chronograf.Id);
+
+    res.json({
+      msg: 'Se instalo correctamente InfluxDB - Telegraf - Kapacitor - Chronograf',
+    });
   } catch (error) {
     res.status(500).json({ msg: 'Error en el API', error: error });
   }

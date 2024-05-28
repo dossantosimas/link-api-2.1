@@ -175,6 +175,8 @@ export async function InstallComponents(req: Request, res: Response) {
       }
     }
 
+    // await ComandoLocales.Run('sudo chmod +777 $PWD/docker/kapacitorTick')
+
     console.log('> Instalando Telegraf...');
     const dc_telegraf = await DockerCompose.InstallServicio('telegraf');
     if (!dc_telegraf)
@@ -190,8 +192,8 @@ export async function InstallComponents(req: Request, res: Response) {
 
     await ComandoLocales.Run('sudo chmod +777 $PWD/docker/kapacitor/kapacitor.conf')
     await ComandoLocales.Run('sudo chmod +777 $PWD/docker/kapacitorLib')
-    await ComandoLocales.Run('sudo chmod +777 $PWD/docker/kapacitorTikc')
-    await ComandoLocales.Run('sudo chmod +777 $PWD/docker/kapacitorTikc')
+    await ComandoLocales.Run('sudo chmod +777 $PWD/docker/kapacitorTick')
+
 
     let cont_telegraf = await DockerAPI.GetContenedor('telegraf');
     let cont_kapacitor = await DockerAPI.GetContenedor('kapacitor');

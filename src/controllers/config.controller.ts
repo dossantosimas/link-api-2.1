@@ -155,6 +155,11 @@ export async function InstallComponents(req: Request, res: Response) {
               token,
               '../../docker/start/telegraf.env'
             );
+            await updateEnvVar(
+              'KAPACITOR_INFLUXDB_0_PASSWORD',
+              token,
+              '../../docker/start/telegraf.env'
+            );
             while_ok = true;
           }
         }

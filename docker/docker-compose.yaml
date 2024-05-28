@@ -35,5 +35,13 @@ services:
        - ./kapacitor/kapacitor.conf:/etc/kapacitor/kapacitor.conf:ro
        - ./kapacitorTick:/home/kapacitor
     restart: always
+
+  chronograf:
+    container_name: chronograf
+    image: chronograf
+    ports:
+      - "8888:8888"
+    restart: always
+
     
 

@@ -270,12 +270,14 @@ export async function InstallComponents(req: Request, res: Response) {
     const dc_kapacitor = await DockerCompose.InstallServicio('kapacitor');
     if (!dc_kapacitor)
       res.status(500).json({ msg: 'No se pudo instalar kapacitor' });
+    console.log('5. Configurando permisos');
+    await sleep(10000);
 
     await ComandoLocales.Run('sudo chmod +777 $PWD/docker/kapacitorLib');
     await ComandoLocales.Run('sudo chmod +777 $PWD/docker/kapacitorTick');
     console.log('> Kapacitor instalado');
 
-    console.log('5. Instalando Chronograf...');
+    console.log('6. Instalando Chronograf...');
     const dc_chronograf = await DockerCompose.InstallServicio('chronograf');
     if (!dc_chronograf)
       res.status(500).json({ msg: 'No se pudo instalar chronograf' });

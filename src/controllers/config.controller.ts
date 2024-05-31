@@ -254,7 +254,7 @@ export async function InstallComponents(req: Request, res: Response) {
     console.log('2. Configurando permisos');
 
     await ComandoLocales.Run(
-      'sudo chmod +777 $PWD/docker/telegraf/kapacitor.conf'
+      'sudo chmod +777 $PWD/docker/telegraf/telegraf.conf'
     );
     await ComandoLocales.Run(
       'sudo chmod +777 $PWD/docker/kapacitor/kapacitor.conf'

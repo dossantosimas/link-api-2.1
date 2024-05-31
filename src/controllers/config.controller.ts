@@ -239,10 +239,66 @@ import { IExecId } from '../models/docker.model';
 // }
 
 // version 3
+// export async function InstallComponents(req: Request, res: Response) {
+//   try {
+//     console.log('--------- Empezando la Instalacion ---------');
+//     console.log('1. Instalando influxdb');
+
+//     const dc_influx = await DockerCompose.InstallServicio('influxdb');
+
+//     if (!dc_influx) {
+//       console.error('Error 1');
+//       res.status(500).json({ msg: 'No se pudo instalar influxdb' });
+//     }
+
+//     console.log('2. Configurando permisos');
+
+//     await ComandoLocales.Run(
+//       'sudo chmod +777 $PWD/docker/telegraf/telegraf.conf'
+//     );
+//     await ComandoLocales.Run(
+//       'sudo chmod +777 $PWD/docker/kapacitor/kapacitor.conf'
+//     );
+
+//     console.log('3. Instalando Telegraf...');
+//     const dc_telegraf = await DockerCompose.InstallServicio('telegraf');
+//     if (!dc_telegraf)
+//       res.status(500).json({ msg: 'No se pudo instalar telegraf' });
+//     console.log('> Telegraf instalado');
+
+//     console.log('4. Instalando Kapacitor...');
+//     const dc_kapacitor = await DockerCompose.InstallServicio('kapacitor');
+//     if (!dc_kapacitor)
+//       res.status(500).json({ msg: 'No se pudo instalar kapacitor' });
+//     console.log('5. Configurando permisos');
+//     await sleep(10000);
+
+//     // await ComandoLocales.Run('sudo chmod +777 $PWD/docker/kapacitorLib');
+//     // await ComandoLocales.Run('sudo chmod +777 $PWD/docker/kapacitorTick');
+//     console.log('> Kapacitor instalado');
+
+//     console.log('6. Instalando Chronograf...');
+//     const dc_chronograf = await DockerCompose.InstallServicio('chronograf');
+//     if (!dc_chronograf)
+//       res.status(500).json({ msg: 'No se pudo instalar chronograf' });
+//     console.log('> Chronograf instalado');
+
+//     res.json({
+//       msg: 'Se instalo correctamente InfluxDB - Telegraf - Kapacitor - Chronograf',
+//     });
+//   } catch (error) {
+//     res.status(500).json({ msg: 'Error en el API', error: error });
+//   }
+// }
+
+// version 4
 export async function InstallComponents(req: Request, res: Response) {
   try {
     console.log('--------- Empezando la Instalacion ---------');
-    console.log('1. Instalando influxdb');
+    console.log('1. Contenedores');
+
+    // await ComandoLocales.Run('sudo chmod +777 $PWD/docker/kapacitorLib');
+    await ComandoLocales.Run('sudo docker compose -f $PWD/docker/docker-compose.yaml up -d');
 
     const dc_influx = await DockerCompose.InstallServicio('influxdb');
 
@@ -252,36 +308,17 @@ export async function InstallComponents(req: Request, res: Response) {
     }
 
     console.log('2. Configurando permisos');
-
+    await sleep(10000);
     await ComandoLocales.Run(
       'sudo chmod +777 $PWD/docker/telegraf/telegraf.conf'
     );
     await ComandoLocales.Run(
       'sudo chmod +777 $PWD/docker/kapacitor/kapacitor.conf'
     );
-
-    console.log('3. Instalando Telegraf...');
-    const dc_telegraf = await DockerCompose.InstallServicio('telegraf');
-    if (!dc_telegraf)
-      res.status(500).json({ msg: 'No se pudo instalar telegraf' });
-    console.log('> Telegraf instalado');
-
-    console.log('4. Instalando Kapacitor...');
-    const dc_kapacitor = await DockerCompose.InstallServicio('kapacitor');
-    if (!dc_kapacitor)
-      res.status(500).json({ msg: 'No se pudo instalar kapacitor' });
-    console.log('5. Configurando permisos');
-    await sleep(10000);
-
+    await sleep(4000);
     await ComandoLocales.Run('sudo chmod +777 $PWD/docker/kapacitorLib');
     await ComandoLocales.Run('sudo chmod +777 $PWD/docker/kapacitorTick');
-    console.log('> Kapacitor instalado');
 
-    console.log('6. Instalando Chronograf...');
-    const dc_chronograf = await DockerCompose.InstallServicio('chronograf');
-    if (!dc_chronograf)
-      res.status(500).json({ msg: 'No se pudo instalar chronograf' });
-    console.log('> Chronograf instalado');
 
     res.json({
       msg: 'Se instalo correctamente InfluxDB - Telegraf - Kapacitor - Chronograf',

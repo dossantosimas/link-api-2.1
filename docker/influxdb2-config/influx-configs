@@ -1,5 +1,5 @@
 [default]
-  url = "http://influxdb:8086"
+  url = "http://localhost:8086"
   token = "0mn1c0ns4"
   org = "ibisa"
   active = true

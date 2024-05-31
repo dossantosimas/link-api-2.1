@@ -2,6 +2,8 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,node,macos,linux
 token.txt
 !/docker/start/influx.env
+!/docker/kapacitorLib
+!/docker/kapacitorTick
 ### Linux ###
 *~
 

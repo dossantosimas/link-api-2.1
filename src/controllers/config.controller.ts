@@ -302,24 +302,24 @@ export async function InstallComponents(req: Request, res: Response) {
       'sudo docker compose -f $PWD/docker/docker-compose.yaml up -d'
     );
 
-    let cont_influxdb = await DockerAPI.GetContenedor('influxdb');
+    // let cont_influxdb = await DockerAPI.GetContenedor('influxdb');
 
-    const exec_body_url = {
-      AttachStdin: false,
-      AttachStdout: true,
-      AttachStderr: true,
-      Cmd: ['influxd', '--http-bind-address', ':8086'],
-      Tty: false,
-    };
+    // const exec_body_url = {
+    //   AttachStdin: false,
+    //   AttachStdout: true,
+    //   AttachStderr: true,
+    //   Cmd: ['influxd', '--http-bind-address', ':8086'],
+    //   Tty: false,
+    // };
 
-    console.log('> Configurando URL de Influxdb...');
-    await sleep(10000);
-    if (cont_influxdb) {
-      let exec_id = await DockerAPI.ExecId(cont_influxdb.Id, exec_body_url);
-      if (exec_id) {
-        await DockerAPI.RunExec(exec_id.Id);
-      }
-    }
+    // console.log('> Configurando URL de Influxdb...');
+    // await sleep(10000);
+    // if (cont_influxdb) {
+    //   let exec_id = await DockerAPI.ExecId(cont_influxdb.Id, exec_body_url);
+    //   if (exec_id) {
+    //     await DockerAPI.RunExec(exec_id.Id);
+    //   }
+    // }
 
     console.log('2. Configurando permisos');
     await sleep(10000);

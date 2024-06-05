@@ -31,7 +31,7 @@ const port = process.env.PORT || 3001;
   }
 })();
 
-// Habilita CORS para todas las rutas
+// Habilita CORS para todas las rutass
 app.use(cors());
 
 app.use('/api/v1/config', RouteConfig);

@@ -7,6 +7,7 @@ import cors from 'cors';
 import { PropiedadesSerivices } from './services/propiedades.services';
 
 import RouteConfig from './routes/config';
+import RouteBuffer from './routes/buffer'
 
 dotenv.config();
 
@@ -34,6 +35,7 @@ const port = process.env.PORT || 3001;
 app.use(cors());
 
 app.use('/api/v1/config', RouteConfig);
+app.use('/api/v1/budder', RouteBuffer);
 
 app.get('/logger', (_, res) => {
   Logger.error('This is an error log');

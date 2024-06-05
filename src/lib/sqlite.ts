@@ -14,7 +14,7 @@ console.log('Dialect:', process.env.DB_DIALECT)
 // Conexión a la base de datos 'edge'
 export const sequelizeEdge = new Sequelize({
   dialect: process.env.DB_DIALECT as Dialect,
-  storage: './storage/db_ibisa.sqlite',
+  storage: './docker/storage/db_ibisa.sqlite',
   models: [Propiedades]
 });
 

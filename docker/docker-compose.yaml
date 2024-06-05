@@ -43,5 +43,12 @@ services:
       - "8888:8888"
     restart: always
 
-    
+  buffer-link:
+    image: ibisalink/buffer:v0.1
+    container_name: buffer
+    restart: always
+    volumes:
+      - ./storage:/src/db
+
+
 

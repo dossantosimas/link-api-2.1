@@ -35,7 +35,7 @@ const port = process.env.PORT || 3001;
 app.use(cors());
 
 app.use('/api/v1/config', RouteConfig);
-app.use('/api/v1/budder', RouteBuffer);
+app.use('/api/v1/buffer', RouteBuffer);
 
 app.get('/logger', (_, res) => {
   Logger.error('This is an error log');

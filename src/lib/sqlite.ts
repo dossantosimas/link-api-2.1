@@ -24,7 +24,7 @@ export const sequelizeEdge = new Sequelize({
 
 export async function start_db(): Promise<void> {
   try {
-    await ComandoLocales.Run('sudo chmod +777 $PWD/docker/storage');
+    // await ComandoLocales.Run('sudo chmod +777 $PWD/docker/storage');
     await sequelizeEdge.authenticate();
     console.log('Conexión con la base de datos edge establecida con éxito.');
     await sequelizeEdge.sync()

@@ -5,6 +5,7 @@ import { Propiedades } from '../models/propiedades';
 // import { Eventos } from '../models/eventos/eventos';
 import dotenv from 'dotenv'; 
 import { Dialect } from 'sequelize';
+import { ComandoLocales } from '../services/comandos.services';
 
 dotenv.config();
 
@@ -12,6 +13,8 @@ console.log('Database: ',process.env.DB_HOST)
 console.log('Dialect:', process.env.DB_DIALECT)
 
 // Conexión a la base de datos 'edge'
+
+
 export const sequelizeEdge = new Sequelize({
   dialect: process.env.DB_DIALECT as Dialect,
   storage: './docker/storage/db_ibisa.sqlite',
@@ -21,6 +24,7 @@ export const sequelizeEdge = new Sequelize({
 
 export async function start_db(): Promise<void> {
   try {
+    await ComandoLocales.Run('sudo chmod +777 $PWD/docker/storage');
     await sequelizeEdge.authenticate();
     console.log('Conexión con la base de datos edge establecida con éxito.');
     await sequelizeEdge.sync()

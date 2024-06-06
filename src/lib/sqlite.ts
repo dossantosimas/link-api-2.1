@@ -3,6 +3,7 @@ import { Sequelize } from 'sequelize-typescript';
 // import { Propiedades } from '../models/edge/propiedades/propiedades';
 import { Propiedades } from '../models/propiedades';
 // import { Eventos } from '../models/eventos/eventos';
+import { Eventos } from '../models/evento.model';
 import dotenv from 'dotenv'; 
 import { Dialect } from 'sequelize';
 import { ComandoLocales } from '../services/comandos.services';
@@ -18,7 +19,7 @@ console.log('Dialect:', process.env.DB_DIALECT)
 export const sequelizeEdge = new Sequelize({
   dialect: process.env.DB_DIALECT as Dialect,
   storage: './docker/storage/db_ibisa.sqlite',
-  models: [Propiedades]
+  models: [Propiedades, Eventos]
 });
 
 

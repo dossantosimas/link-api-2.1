@@ -8,6 +8,7 @@ import { PropiedadesSerivices } from './services/propiedades.services';
 
 import RouteConfig from './routes/config';
 import RouteBuffer from './routes/buffer'
+import RouterThing from './routes/things'
 
 dotenv.config();
 
@@ -36,6 +37,7 @@ app.use(cors());
 
 app.use('/api/v1/config', RouteConfig);
 app.use('/api/v1/buffer', RouteBuffer);
+app.use('/api/vs/things', RouterThing)
 
 app.get('/logger', (_, res) => {
   Logger.error('This is an error log');

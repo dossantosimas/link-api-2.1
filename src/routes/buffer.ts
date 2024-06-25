@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { saveProcess, saveNoti, GetAllEventos } from "../controllers/buffer.controller";
-// import { saveProcess, saveNoti } from "../../controllers/evento.controller";
 
 const router = Router()
 

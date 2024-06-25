@@ -19,6 +19,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@influxdata/influxdb-client": "^1.33.2",
     "@types/morgan": "^1.9.9",
     "@types/mysql": "^2.15.26",
     "cors": "^2.8.5",

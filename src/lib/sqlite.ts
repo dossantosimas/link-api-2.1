@@ -1,12 +1,16 @@
 import { Sequelize } from 'sequelize-typescript';
-// import config from "../config/config";
-// import { Propiedades } from '../models/edge/propiedades/propiedades';
 import { Propiedades } from '../models/propiedades';
-// import { Eventos } from '../models/eventos/eventos';
 import { Eventos } from '../models/evento.model';
 import dotenv from 'dotenv'; 
 import { Dialect } from 'sequelize';
-import { ComandoLocales } from '../services/comandos.services';
+
+import { Label } from '../models/label.model';
+import { Label_Thing } from '../models/label_thing.model';
+import { Metric } from '../models/metric.model';
+import { Point } from '../models/point.model';
+import { Thing } from '../models/thing.model';
+
+
 
 dotenv.config();
 
@@ -19,13 +23,12 @@ console.log('Dialect:', process.env.DB_DIALECT)
 export const sequelizeEdge = new Sequelize({
   dialect: process.env.DB_DIALECT as Dialect,
   storage: './docker/storage/db_ibisa.sqlite',
-  models: [Propiedades, Eventos]
+  models: [Propiedades, Eventos, Label, Label_Thing, Metric, Point, Thing]
 });
 
 
 export async function start_db(): Promise<void> {
   try {
-    // await ComandoLocales.Run('sudo chmod +777 $PWD/docker/storage');
     await sequelizeEdge.authenticate();
     console.log('Conexión con la base de datos edge establecida con éxito.');
     await sequelizeEdge.sync()

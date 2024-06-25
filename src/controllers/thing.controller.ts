@@ -4,8 +4,6 @@ import { ComandoLocales } from '../services/comandos.services';
 
 export async function getAllMetrics(req: Request, res: Response) {
   try {
-    const cmd_result = await ComandoLocales.Run('docker exec -it influxdb influx org list')
-
     console.log('--------- TODAS LAS METRICAS ---------');
     const lista = await Influx.getAllMeasurements('ibisa')
     console.log('LISTA:', lista)

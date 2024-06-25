@@ -3,6 +3,7 @@ import { InfluxDBInstance as Influx } from '../services/influxdb.services';
 
 export async function getAllMetrics(req: Request, res: Response) {
   try {
+    console.log('--------- TODAS LAS METRICAS ---------');
     const lista = Influx.getAllMeasurements('ibisa')
     console.log('LISTA:', lista)
 

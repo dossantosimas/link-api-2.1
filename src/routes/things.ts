@@ -1,8 +1,8 @@
-import { Router } from "express";
+import { Router } from 'express';
+import { getAllMetrics } from '../controllers/thing.controller';
 
-const router = Router()
+const router = Router();
 
-router
-    .post('/things', )
+router.get('/things', getAllMetrics);
 
-    export default router
+export default router;

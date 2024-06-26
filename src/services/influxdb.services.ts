@@ -100,9 +100,9 @@ export class InfluxServices {
       const response = await fetch(url, {
         method: 'POST',
         headers: {
-          Accept: 'application/json',
+          'Authorization': 'Token 0mn1c0ns4',
+          'Accept': 'application/json',
           'Content-Type': 'application/json',
-          Authorization: 'Token 0mn1c0ns4',
         },
         body: JSON.stringify(payload),
       });

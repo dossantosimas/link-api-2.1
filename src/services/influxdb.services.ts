@@ -28,7 +28,7 @@ export class InfluxServices {
     this.bucketID = id;
   }
 
-  async getIDs() {
+  async getIDs(): Promise<boolean> {
     const url = 'http://localhost:8086/api/v2/buckets?name=ibisa';
     const headers = {
       Authorization: 'Token 0mn1c0ns4',
@@ -40,20 +40,27 @@ export class InfluxServices {
       const response = await fetch(url, { method: 'GET', headers });
       if (response.ok) {
         const data = await response.json();
-        if(data){
-          const orgID = data.bucket[0].orgID
-          const bucketID = data.bucket[0].id
-          console.log('ORG: IBISA - ', orgID)
-          console.log('BUCKET: IBISA - ', orgID)
-          this.setOrgID(orgID)
-          this.setBucketID(bucketID)
+        if (data) {
+          const orgID = data.bucket[0].orgID;
+          const bucketID = data.bucket[0].id;
+          console.log('ORG: IBISA - ', orgID);
+          console.log('BUCKET: IBISA - ', orgID);
+          this.setOrgID(orgID);
+          this.setBucketID(bucketID);
         }
         console.log('Bucket information:', data);
+
+        return true;
       } else {
-        console.error('Error fetching bucket information:', response.statusText);
+        console.error(
+          'Error fetching bucket information:',
+          response.statusText
+        );
+        return false;
       }
     } catch (error) {
       console.error('An error occurred:', error);
+      return false;
     }
   }
 

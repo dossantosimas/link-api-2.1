@@ -29,3 +29,24 @@ export async function getAllFields(req: Request, res: Response) {
     res.status(500).json({ msg: 'Error en el API', error: error });
   }
 }
+
+export async function getConfig(req: Request, res: Response){
+  try {
+    console.log('--------- TODAS LAS CONFIGURACIONES ---------');
+    const response = await Influx.getIDs()
+    
+    if(response){
+      res.json({
+        msg: 'Configuracion correcta',
+      });
+    } else {
+      res.json({
+        msg: 'Configuracion incorrecta',
+      });
+    }
+
+
+  } catch (error) {
+    res.status(500).json({ msg: 'Error en el API', error: error });
+  }
+}

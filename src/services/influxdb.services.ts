@@ -40,7 +40,6 @@ export class InfluxServices {
       const response = await fetch(url, { method: 'GET', headers });
       if (response.ok) {
         const data = await response.json();
-        console.log('DATA:', data)
         if (data) {
           const orgID = data.buckets[0].orgID;
           const bucketID = data.buckets[0].id;
@@ -73,12 +72,54 @@ export class InfluxServices {
     return result.map((row) => row._value);
   }
 
-  async getAllFields(measurement: string, bucket: string): Promise<string[]> {
-    const query = `import "influxdata/influxdb/schema"
-                   schema.measurementFieldKeys(bucket: "${bucket}", measurement: "${measurement}")`;
+  async getAllFields(measurement: string, bucket: string): Promise<string[] | boolean> {
+    const url = `http://localhost:8086/api/v2/query?org=${this.org}`;
+    const headers = {
+      Authorization: 'Token 0mn1c0ns4',
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    };
+    const payload = `import \"regexp\"\n\n  from(bucket: \"ibisa\")\n  |> range(start: -12h, stop: now())\n  |> filter(fn: (r) => (r[\"_measurement\"] == \"${measurement}\"))\n  |> keep(columns: [\"_field\"])\n  |> group()\n  |> distinct(column: \"_field\")\n  |> limit(n: 1000)\n  |> sort()`;
 
-    const result = await this.queryApi.collectRows<{ _field: string }>(query);
-    return result.map((row) => row._field);
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+      if (response.ok) {
+        const data = await response.text();
+        if (data) {
+          const lines = data.split('\n');
+
+          // Filtra las líneas que contienen ",,0,"
+          const filteredLines = lines.filter((line) => line.includes(',,0,'));
+          
+          // Extrae los valores después de ",,0,"
+          const values = filteredLines.map((line) => line.split(',,0,')[1].trim());
+          
+          // Crea un array de strings con los valores
+          const arrayOfStrings: string[] = values;
+          
+          console.log(arrayOfStrings); //
+        }
+        console.log('Bucket information:', data);
+
+        return true;
+      } else {
+        console.error(
+          'Error fetching bucket information:',
+          response.statusText
+        );
+        return false;
+      }
+    } catch (error) {
+      console.error('An error occurred:', error);
+      return false;
+    }
   }
 }
 

@@ -3,7 +3,10 @@ import { getAllMeasurements, getAllFields } from '../controllers/thing.controlle
 
 const router = Router();
 
-router.get('/measurements/all', getAllMeasurements);
-router.get('/fields/all', getAllFields)
+router
+.get('/measurements/all', getAllMeasurements)
+.get('/fields/all', getAllFields)
+.post('/influxdb/config')
+
 
 export default router;

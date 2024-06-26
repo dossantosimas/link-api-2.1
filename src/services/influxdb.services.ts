@@ -72,22 +72,37 @@ export class InfluxServices {
     return result.map((row) => row._value);
   }
 
-  async getAllFields(measurement: string, bucket: string): Promise<string[] | boolean> {
+  async getAllFields(
+    measurement: string,
+    bucket: string
+  ): Promise<string[] | boolean> {
     const url = `http://localhost:8086/api/v2/query?org=${this.org}`;
     const headers = {
       Authorization: 'Token 0mn1c0ns4',
       Accept: 'application/json',
       'Content-Type': 'application/json',
     };
-    const payload = `import \"regexp\"\n\n  from(bucket: \"ibisa\")\n  |> range(start: -12h, stop: now())\n  |> filter(fn: (r) => (r[\"_measurement\"] == \"${measurement}\"))\n  |> keep(columns: [\"_field\"])\n  |> group()\n  |> distinct(column: \"_field\")\n  |> limit(n: 1000)\n  |> sort()`;
-
+    const payload = {
+      query: `import "regexp"
+              from(bucket: "ibisa")
+              |> range(start: -12h, stop: now())
+              |> filter(fn: (r) => (r["_measurement"] == "modbus"))
+              |> keep(columns: ["_field"])
+              |> group()
+              |> distinct(column: "_field")
+              |> limit(n: 1000)
+              |> sort()`,
+      dialect: {
+        annotations: ['default'],
+      },
+    };
     try {
       const response = await fetch(url, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
-          'Authorization': 'Token 0mn1c0ns4',
+          Authorization: 'Token 0mn1c0ns4',
         },
         body: JSON.stringify(payload),
       });
@@ -98,13 +113,15 @@ export class InfluxServices {
 
           // Filtra las líneas que contienen ",,0,"
           const filteredLines = lines.filter((line) => line.includes(',,0,'));
-          
+
           // Extrae los valores después de ",,0,"
-          const values = filteredLines.map((line) => line.split(',,0,')[1].trim());
-          
+          const values = filteredLines.map((line) =>
+            line.split(',,0,')[1].trim()
+          );
+
           // Crea un array de strings con los valores
           const arrayOfStrings: string[] = values;
-          
+
           console.log(arrayOfStrings); //
         }
         console.log('Bucket information:', data);

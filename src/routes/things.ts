@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import { getAllMetrics } from '../controllers/thing.controller';
+import { getAllMeasurements, getAllFields } from '../controllers/thing.controller';
 
 const router = Router();
 
-router.get('/things', getAllMetrics);
+router.get('/measurements/all', getAllMeasurements);
+router.get('/fields/all', getAllFields)
 
 export default router;

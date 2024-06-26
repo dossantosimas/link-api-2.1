@@ -2,6 +2,8 @@ import { InfluxDB, QueryApi } from '@influxdata/influxdb-client';
 
 export class InfluxServices {
   private org: string;
+  private orgID: string;
+  private bucketID: string;
   private token: string;
   private url: string;
   private influxdb: InfluxDB;
@@ -16,6 +18,43 @@ export class InfluxServices {
       token: this.token,
     });
     this.queryApi = this.influxdb.getQueryApi(this.org);
+  }
+
+  setOrgID(id: string) {
+    this.orgID = id;
+  }
+
+  setBucketID(id: string) {
+    this.bucketID = id;
+  }
+
+  async getIDs() {
+    const url = 'http://localhost:8086/api/v2/buckets?name=ibisa';
+    const headers = {
+      Authorization: 'Token 0mn1c0ns4',
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    };
+
+    try {
+      const response = await fetch(url, { method: 'GET', headers });
+      if (response.ok) {
+        const data = await response.json();
+        if(data){
+          const orgID = data.bucket[0].orgID
+          const bucketID = data.bucket[0].id
+          console.log('ORG: IBISA - ', orgID)
+          console.log('BUCKET: IBISA - ', orgID)
+          this.setOrgID(orgID)
+          this.setBucketID(bucketID)
+        }
+        console.log('Bucket information:', data);
+      } else {
+        console.error('Error fetching bucket information:', response.statusText);
+      }
+    } catch (error) {
+      console.error('An error occurred:', error);
+    }
   }
 
   async getAllMeasurements(bucket: string): Promise<string[]> {

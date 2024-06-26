@@ -40,9 +40,10 @@ export class InfluxServices {
       const response = await fetch(url, { method: 'GET', headers });
       if (response.ok) {
         const data = await response.json();
+        console.log('DATA:', data)
         if (data) {
-          const orgID = data.bucket[0].orgID;
-          const bucketID = data.bucket[0].id;
+          const orgID = data.buckets[0].orgID;
+          const bucketID = data.buckets[0].id;
           console.log('ORG: IBISA - ', orgID);
           console.log('BUCKET: IBISA - ', orgID);
           this.setOrgID(orgID);

@@ -87,6 +87,7 @@ export class InfluxServices {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
+          'Authorization': 'Token 0mn1c0ns4',
         },
         body: JSON.stringify(payload),
       });

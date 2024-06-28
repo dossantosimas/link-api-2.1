@@ -13,11 +13,18 @@ export class ThingsServices {
   }
 
   async create(body: IThing){
-    return await Thing.create({
-        name: body.name,
-        description: body.description,
-        status: true, // Set an appropriate value for status
-    });
+
+    try{
+        return await Thing.create({
+            name: body.name,
+            description: body.description,
+            status: true, // Set an appropriate value for status
+        });
+    } catch(error){
+        console.error('ThingsServices.create:', error)
+        return undefined
+    }
+
   }
 }
 

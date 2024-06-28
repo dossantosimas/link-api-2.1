@@ -58,12 +58,14 @@ export async function create(req: Request, res: Response) {
     console.log('--------- CREAR THING ---------');
     const body: IThing = req.body;
     const exist = await Thing.findName(body.name);
+    console.log('----> PASO 1')
 
     if (exist) {
       res.status(409).json({
         msg: 'Ya existe una cosa con el mismo nombre.',
       });
     }
+    console.log('----> PASO 2')
 
     const newThing = await Thing.create(body)
     console.log('NEW THING:', newThing)

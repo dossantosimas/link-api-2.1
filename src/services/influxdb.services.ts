@@ -122,7 +122,7 @@ export class InfluxServices {
           // Crea un array de strings con los valores
           const arrayOfStrings: string[] = values;
 
-          console.log(arrayOfStrings); //
+          // console.log(arrayOfStrings); //
           return arrayOfStrings;
         }
         // console.log('Bucket information:', data);

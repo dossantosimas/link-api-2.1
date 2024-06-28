@@ -75,7 +75,7 @@ export class InfluxServices {
   async getAllFields(
     measurement: string,
     bucket: string
-  ): Promise<string[] | boolean> {
+  ): Promise<string[]> {
     const url = `http://localhost:8086/api/v2/query?org=${this.org}`;
     const headers = {
       Authorization: 'Token 0mn1c0ns4',
@@ -123,20 +123,22 @@ export class InfluxServices {
           const arrayOfStrings: string[] = values;
 
           console.log(arrayOfStrings); //
+          return arrayOfStrings;
         }
-        console.log('Bucket information:', data);
+        // console.log('Bucket information:', data);
 
-        return true;
+        // return true;
+        return []
       } else {
         console.error(
           'Error fetching bucket information:',
           response.statusText
         );
-        return false;
+        return [];
       }
     } catch (error) {
       console.error('An error occurred:', error);
-      return false;
+      return [];
     }
   }
 }

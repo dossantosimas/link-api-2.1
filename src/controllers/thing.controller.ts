@@ -57,30 +57,21 @@ export async function create(req: Request, res: Response) {
   try {
     console.log('--------- CREAR THING ---------');
     const body: IThing = req.body;
-    const exist = await Thing.findName(body.name);
-    console.log('----> PASO 1')
+    console.log('BODY:', body)
+    // const exist = await Thing.findName(body.name);
+    // console.log('----> PASO 1')
 
-    if (exist) {
-      res.status(409).json({
-        msg: 'Ya existe una cosa con el mismo nombre.',
-      });
-    }
-    console.log('----> PASO 2')
-
-    const newThing = await Thing.create(body)
-    console.log('NEW THING:', newThing)
-
-
-
-    // if(response){
-    //   res.json({
-    //     msg: 'Configuracion correcta',
-    //   });
-    // } else {
-    //   res.json({
-    //     msg: 'Configuracion incorrecta',
+    // if (exist) {
+    //   res.status(409).json({
+    //     msg: 'Ya existe una cosa con el mismo nombre.',
     //   });
     // }
+    // console.log('----> PASO 2')
+
+    // const newThing = await Thing.create(body)
+    // console.log('NEW THING:', newThing)
+
+
 
     res.json({
       msg: 'Configuracion correcta',

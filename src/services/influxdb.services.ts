@@ -84,9 +84,9 @@ export class InfluxServices {
     };
     const payload = {
       query: `import "regexp"
-              from(bucket: "ibisa")
+              from(bucket: "${bucket}")
               |> range(start: -12h, stop: now())
-              |> filter(fn: (r) => (r["_measurement"] == "modbus"))
+              |> filter(fn: (r) => (r["_measurement"] == "${measurement}"))
               |> keep(columns: ["_field"])
               |> group()
               |> distinct(column: "_field")
@@ -110,9 +110,9 @@ export class InfluxServices {
         const data = await response.text();
         if (data) {
           const lines = data.split('\n');
-
+``
           // Filtra las líneas que contienen ",,0,"
-          const filteredLines = lines.filter((line) => measurement+line.includes(',,0,'));
+          const filteredLines = lines.filter((line) => `${measurement}.${line.includes(',,0,')}`);
 
           // Extrae los valores después de ",,0,"
           const values = filteredLines.map((line) =>

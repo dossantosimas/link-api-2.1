@@ -58,8 +58,8 @@ export async function create(req: Request, res: Response) {
     console.log('--------- CREAR THING ---------');
     const body: IThing = req.body;
     console.log('BODY:', body)
-    // const exist = await Thing.findName(body.name);
-    // console.log('----> PASO 1')
+    const exist = await Thing.findName(body.name);
+    console.log('----> PASO 1')
 
     // if (exist) {
     //   res.status(409).json({

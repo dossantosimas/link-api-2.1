@@ -11,17 +11,18 @@ export class Thing extends Model {
     @Column({ type: DataType.BOOLEAN, allowNull: false })
     status: boolean;
 
-    // aplica tenant
+    // aplica tenant?
     // @Column({ type: DataType.STRING, allowNull: false })
     // tenant: string;
 
-    @Column({ type: DataType.STRING, allowNull: true, defaultValue: null })
-    sub_creator: string;
+    // que es?
+    // @Column({ type: DataType.STRING, allowNull: true, defaultValue: null })
+    // sub_creator: string;
 }
 
 export interface IThing {
     name: string,
     description: string,
     status: string,
-    sub_creator: string
+    // sub_creator: string
 }

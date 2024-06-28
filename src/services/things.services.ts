@@ -9,7 +9,15 @@ export class ThingsServices {
       },
     });
 
-    console.log('EXIST:', exist)
+    return exist
+  }
+
+  async create(body: IThing){
+    return await Thing.create({
+        name: body.name,
+        description: body.description,
+        status: true, // Set an appropriate value for status
+    });
   }
 }
 

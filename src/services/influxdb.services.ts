@@ -112,11 +112,11 @@ export class InfluxServices {
           const lines = data.split('\n');
 ``
           // Filtra las líneas que contienen ",,0,"
-          const filteredLines = lines.filter((line) => `${measurement}.${line.includes(',,0,')}`);
+          const filteredLines = lines.filter((line) => line.includes(',,0,'));
 
           // Extrae los valores después de ",,0,"
           const values = filteredLines.map((line) =>
-            line.split(',,0,')[1].trim()
+            `measurements.${line.split(',,0,')[1].trim()}`
           );
 
           // Crea un array de strings con los valores

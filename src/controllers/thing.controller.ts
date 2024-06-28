@@ -10,6 +10,7 @@ export async function getAllMeasurements(req: Request, res: Response) {
 
     res.json({
         msg: 'test',
+        meMeasurements: lista
       });
   } catch (error) {
     res.status(500).json({ msg: 'Error en el API', error: error });
@@ -24,6 +25,7 @@ export async function getAllFields(req: Request, res: Response) {
 
     res.json({
         msg: 'test',
+        field: lista
       });
   } catch (error) {
     res.status(500).json({ msg: 'Error en el API', error: error });

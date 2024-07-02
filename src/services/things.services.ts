@@ -8,7 +8,7 @@ export class ThingsServices {
         name: nombre,
       },
     });
-
+    console.log('EXIST:', exist)
     return exist
   }
 

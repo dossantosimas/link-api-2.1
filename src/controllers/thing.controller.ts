@@ -71,7 +71,7 @@ export async function create(req: Request, res: Response) {
 
     if (exist) {
       console.log('PASO 0')
-      res.status(409).json({
+      return res.status(409).json({
         msg: 'Ya existe una cosa con el mismo nombre.',
       });
     }
@@ -79,7 +79,7 @@ export async function create(req: Request, res: Response) {
     const newThing = await Thing.create(body)
     console.log('NEW THING:', newThing)
 
-    res.json({
+    return res.json({
       msg: 'Se creo el THING',
     });
   } catch (error) {

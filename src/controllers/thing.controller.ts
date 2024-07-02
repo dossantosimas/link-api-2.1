@@ -76,7 +76,8 @@ export async function create(req: Request, res: Response) {
       });
     }
     console.log('PASO 1')
-    const newThing = await Thing.create(body)
+    const created = await Thing.create(body)
+    const newThing = created?.dataValues
     console.log('NEW THING:', newThing)
 
     return res.json({

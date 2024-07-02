@@ -79,7 +79,7 @@ export async function create(req: Request, res: Response) {
     console.log('NEW THING:', newThing)
 
     res.json({
-      msg: 'Configuracion correcta',
+      msg: 'Se creo el THING',
     });
   } catch (error) {
     res.status(500).json({ msg: 'Error en el API', error: error });

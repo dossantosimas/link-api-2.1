@@ -9,7 +9,7 @@ import { Label_Thing } from '../models/label_thing.model';
 import { Metric } from '../models/metric.model';
 import { Point } from '../models/point.model';
 import { Thing } from '../models/thing.model';
-
+import { ComandoLocales } from '../services/comandos.services';
 
 
 dotenv.config();
@@ -29,6 +29,7 @@ export const sequelizeEdge = new Sequelize({
 
 export async function start_db(): Promise<void> {
   try {
+    await ComandoLocales.Run('sudo chmod +777 $PWD/docker/storage/db_ibisa.sqlite');
     await sequelizeEdge.authenticate();
     console.log('Conexión con la base de datos edge establecida con éxito.');
     await sequelizeEdge.sync()

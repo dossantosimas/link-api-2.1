@@ -36,6 +36,7 @@ export const sequelizeThing = new Sequelize({
 
 export async function start_db(): Promise<void> {
   try {
+    await ComandoLocales.Run('sudo mkdir $PWD/src/db/thing');
     await ComandoLocales.Run('sudo chmod +777 $PWD/src/db/thing');
     await sequelizeEdge.authenticate();
     await sequelizeThing.authenticate();

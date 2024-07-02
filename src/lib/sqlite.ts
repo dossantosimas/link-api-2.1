@@ -36,14 +36,15 @@ export const sequelizeThing = new Sequelize({
 
 export async function start_db(): Promise<void> {
   try {
-    await ComandoLocales.Run('sudo chmod +777 $PWD/docker/storage/db_ibisa.sqlite');
-    await ComandoLocales.Run('sudo chmod +777 $PWD/docker/storage/db_thing.sqlite');
+
     await sequelizeEdge.authenticate();
     await sequelizeThing.authenticate();
     console.log('Conexión con la base de datos edge establecida con éxito.');
     await sequelizeEdge.sync()
     await sequelizeThing.sync()
 
+    await ComandoLocales.Run('sudo chmod +777 $PWD/docker/storage/db_ibisa.sqlite');
+    await ComandoLocales.Run('sudo chmod +777 $PWD/docker/storage/db_thing.sqlite');
     // await sequelizeMuestras.authenticate();
     // console.log('Conexión con la base de datos muestras establecida con éxito.');
 

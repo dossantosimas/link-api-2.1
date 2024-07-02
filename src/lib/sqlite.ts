@@ -44,7 +44,7 @@ export async function start_db(): Promise<void> {
     await sequelizeThing.sync()
 
     await ComandoLocales.Run('sudo chmod +777 $PWD/docker/storage/db_ibisa.sqlite');
-    await ComandoLocales.Run('sudo chmod +777 $PWD/docker/storage/db_thing.sqlite');
+    await ComandoLocales.Run('sudo chmod +777 $PWD/src/db/thing/db_thing.sqlite');
     // await sequelizeMuestras.authenticate();
     // console.log('Conexión con la base de datos muestras establecida con éxito.');
 

@@ -29,7 +29,7 @@ export const sequelizeEdge = new Sequelize({
 
 export const sequelizeThing = new Sequelize({
   dialect: process.env.DB_DIALECT as Dialect,
-  storage: './docker/storage/db_thing.sqlite',
+  storage: './src/db/thing/db_thing.sqlite',
   models: [Eventos, Label, Label_Thing, Metric, Point, Thing]
 });
 

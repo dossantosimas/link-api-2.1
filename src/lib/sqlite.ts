@@ -36,11 +36,11 @@ export const sequelizeThing = new Sequelize({
 
 export async function start_db(): Promise<void> {
   try {
-    await ComandoLocales.Run('sudo mkdir $PWD/src/db/thing');
-    await ComandoLocales.Run('sudo chmod +777 $PWD/src/db/thing');
+    // await ComandoLocales.Run('sudo mkdir $PWD/src/db/thing');
+    // await ComandoLocales.Run('sudo chmod +777 $PWD/src/db/thing');
     await sequelizeEdge.authenticate();
     await sequelizeThing.authenticate();
-    console.log('Conexión con la base de datos edge establecida con éxito.');
+    console.log('Conexion con la base de datos edge establecida con exito.');
     await sequelizeEdge.sync()
     await sequelizeThing.sync()
 

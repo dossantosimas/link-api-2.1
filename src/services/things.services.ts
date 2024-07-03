@@ -12,7 +12,7 @@ export class ThingsServices {
     return exist
   }
 
-  async create(body: IThing){
+  async create(name: IThing){
 
     try{
         return await Thing.create({

@@ -1,0 +1,22 @@
+### influxdb
+
+wget -q https://repos.influxdata.com/influxdata-archive.key
+echo '393e8779c89ac8d958f81f942f9ad7fb82a25e133faddaf92e15b16e6ac9ce4c influxdata-archive.key' | sha256sum -c
+cat influxdata-archive.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/influxdata-archive.gpg > /dev/null
+echo 'deb [signed-by=/etc/apt/trusted.gpg.d/influxdata-archive.gpg] https://repos.influxdata.com/debian stable main' | sudo tee /etc/apt/sources.list.d/influxdata.list
+
+sudo apt-get update && sudo apt-get install influxdb2
+
+sudo apt-get update && sudo apt-get install telegraf
+
+sudo apt-get update && sudo apt-get install chronograf
+
+sudo apt-get update && sudo apt-get install kapacitor
+
+
+
+influxdb-token: 3NcavCY8LN1kxMia_kjWWDENFe5yGcOTbuA9ip6mDHwYnTclUVxJjUhWknfg45dRqte73TuGcCE1QR_WVBQaYw==
+
+
+export INFLUX_TOKEN=AesTwR2KGj1bUfQb3iADktyfltMvBrSZe-2t2027Hjoxz7OX47DTXta1FDAr3Cz0OobeHq04lwzOYyxn0ELk0Q==
+telegraf --config http://link2-desarrollo:8086/api/v2/telegrafs/0d49110672dd8000

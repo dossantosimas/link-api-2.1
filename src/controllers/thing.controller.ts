@@ -56,13 +56,13 @@ export async function getConfig(req: Request, res: Response) {
 export async function create(req: Request, res: Response) {
   try {
     console.log('--------- CREAR THING ---------');
-    const body: IThing = req.body;
-    console.log('BODY:', body);
+    // const body: IThing = req.body;
+    // console.log('BODY:', body);
 
-    const { name, description } = body;
-
+    const { name, description } = req.body;
+    
     if (!name) {
-      res.json({
+      return res.json({
         msg: 'Falta parametro NAME',
       });
     }
@@ -70,15 +70,25 @@ export async function create(req: Request, res: Response) {
     const exist = await Thing.findName(name);
 
     if (exist) {
-      console.log('PASO 0')
       return res.status(409).json({
         msg: 'Ya existe una cosa con el mismo nombre.',
       });
     }
-    console.log('PASO 1')
-    const created = await Thing.create(body)
+
+    const created = await Thing.create(name, description)
+
+    if(!created) {
+      return res.status(409).json({
+        msg: 'Error al crear Thing',
+      });
+    }
+
     const newThing = created?.dataValues
     console.log('NEW THING:', newThing)
+
+    var thing_json = newThing;
+    var labels = [];
+    var points = [];
 
     return res.json({
       msg: 'Se creo el THING',

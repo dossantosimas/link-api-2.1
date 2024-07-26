@@ -11,7 +11,8 @@ export class InfluxServices {
 
   constructor() {
     this.org = process.env.INFLUX_ORG ?? '';
-    this.token = process.env.INFLUX_BUCKET_AUTH ?? '';
+    // this.token = process.env.INFLUX_BUCKET_AUTH ?? '';
+    this.token = '0mn1c0ns4'
     this.url = process.env.INFLUX_URL ?? '';
     this.influxdb = new InfluxDB({
       url: this.url,
@@ -143,4 +144,6 @@ export class InfluxServices {
   }
 }
 
+// dfhsduifsdf.asgdydgas
+// <measurment>.<field>
 export const InfluxDBInstance = new InfluxServices();

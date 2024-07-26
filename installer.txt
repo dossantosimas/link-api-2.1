@@ -20,3 +20,23 @@ influxdb-token: 3NcavCY8LN1kxMia_kjWWDENFe5yGcOTbuA9ip6mDHwYnTclUVxJjUhWknfg45dR
 
 export INFLUX_TOKEN=AesTwR2KGj1bUfQb3iADktyfltMvBrSZe-2t2027Hjoxz7OX47DTXta1FDAr3Cz0OobeHq04lwzOYyxn0ELk0Q==
 telegraf --config http://link2-desarrollo:8086/api/v2/telegrafs/0d49110672dd8000
+
+
+
+
+
+sudo systemctl enable influxdb
+sudo systemctl start influxdb
+
+influx setup \
+  --username ibisa \
+  --password 0mn1c0ns4 \
+  --token 0mn1c0ns4 \
+  --org ibisa \
+  --bucket ibisa \
+  --force
+
+sudo systemctl enable telegraf
+sudo systemctl start telegraf
+
+sudo systemctl start kapacitor

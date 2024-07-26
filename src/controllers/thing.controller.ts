@@ -53,47 +53,47 @@ export async function getConfig(req: Request, res: Response) {
   }
 }
 
-export async function create(req: Request, res: Response) {
-  try {
-    console.log('--------- CREAR THING ---------');
-    // const body: IThing = req.body;
-    // console.log('BODY:', body);
+// export async function create(req: Request, res: Response) {
+//   try {
+//     console.log('--------- CREAR THING ---------');
+//     // const body: IThing = req.body;
+//     // console.log('BODY:', body);
 
-    const { name, description } = req.body;
+//     const { name, description } = req.body;
     
-    if (!name) {
-      return res.json({
-        msg: 'Falta parametro NAME',
-      });
-    }
+//     if (!name) {
+//       return res.json({
+//         msg: 'Falta parametro NAME',
+//       });
+//     }
 
-    const exist = await Thing.findName(name);
+//     const exist = await Thing.findName(name);
 
-    if (exist) {
-      return res.status(409).json({
-        msg: 'Ya existe una cosa con el mismo nombre.',
-      });
-    }
+//     if (exist) {
+//       return res.status(409).json({
+//         msg: 'Ya existe una cosa con el mismo nombre.',
+//       });
+//     }
 
-    const created = await Thing.create(name, description)
+//     // const created = await Thing.create(name, description)
 
-    if(!created) {
-      return res.status(409).json({
-        msg: 'Error al crear Thing',
-      });
-    }
+//     if(!created) {
+//       return res.status(409).json({
+//         msg: 'Error al crear Thing',
+//       });
+//     }
 
-    const newThing = created?.dataValues
-    console.log('NEW THING:', newThing)
+//     const newThing = created?.dataValues
+//     console.log('NEW THING:', newThing)
 
-    var thing_json = newThing;
-    var labels = [];
-    var points = [];
+//     var thing_json = newThing;
+//     var labels = [];
+//     var points = [];
 
-    return res.json({
-      msg: 'Se creo el THING',
-    });
-  } catch (error) {
-    res.status(500).json({ msg: 'Error en el API', error: error });
-  }
-}
+//     return res.json({
+//       msg: 'Se creo el THING',
+//     });
+//   } catch (error) {
+//     res.status(500).json({ msg: 'Error en el API', error: error });
+//   }
+// }

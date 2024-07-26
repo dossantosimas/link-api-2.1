@@ -60,7 +60,7 @@ export async function create(req: Request, res: Response) {
     // console.log('BODY:', body);
 
     const { name, description } = req.body;
-    
+
     if (!name) {
       return res.json({
         msg: 'Falta parametro NAME',
@@ -75,7 +75,7 @@ export async function create(req: Request, res: Response) {
       });
     }
 
-    const created = await Thing.create(name, description)
+    const created = await Thing.create(name)
 
     if(!created) {
       return res.status(409).json({

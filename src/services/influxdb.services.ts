@@ -1,4 +1,7 @@
 import { InfluxDB, QueryApi } from '@influxdata/influxdb-client';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export class InfluxServices {
   private org: string;
@@ -11,13 +14,20 @@ export class InfluxServices {
 
   constructor() {
     this.org = process.env.INFLUX_ORG ?? '';
-    this.token = process.env.INFLUX_BUCKET_AUTH ?? '';
-    this.url = process.env.INFLUX_URL ?? '';
+    this.token = process.env.INFLUX_TOKEN ?? '';
+    this.url = process.env.INFLUX_URL_DEV ?? '';
     this.influxdb = new InfluxDB({
       url: this.url,
       token: this.token,
     });
-    this.queryApi = this.influxdb.getQueryApi(this.org);
+
+    if (this.influxdb) {
+      console.log('----------------> Conexion a Influxdb');
+      // console.log(this.influxdb)
+      this.queryApi = this.influxdb.getQueryApi(this.org);
+    } else {
+      console.error('----------------> No se pudo conectar a influxdb');
+    }
   }
 
   setOrgID(id: string) {
@@ -72,74 +82,59 @@ export class InfluxServices {
     return result.map((row) => row._value);
   }
 
-  async getAllFields(
-    measurement: string,
-    bucket: string
-  ): Promise<string[]> {
-    const url = `http://localhost:8086/api/v2/query?org=${this.org}`;
-    const headers = {
-      Authorization: 'Token 0mn1c0ns4',
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    };
-    const payload = {
-      query: `import "regexp"
-              from(bucket: "${bucket}")
-              |> range(start: -12h, stop: now())
-              |> filter(fn: (r) => (r["_measurement"] == "${measurement}"))
-              |> keep(columns: ["_field"])
-              |> group()
-              |> distinct(column: "_field")
-              |> limit(n: 1000)
-              |> sort()`,
-      dialect: {
-        annotations: ['default'],
-      },
-    };
+  async getAllFields(measurement: string, bucket: string): Promise<string[]> {
     try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Token 0mn1c0ns4',
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-      if (response.ok) {
-        const data = await response.text();
-        if (data) {
-          const lines = data.split('\n');
-``
-          // Filtra las líneas que contienen ",,0,"
-          const filteredLines = lines.filter((line) => line.includes(',,0,'));
+      const query = `import "regexp"
+      from(bucket: "${bucket}")
+      |> range(start: -12h, stop: now())
+      |> filter(fn: (r) => (r["_measurement"] == "${measurement}"))
+      |> keep(columns: ["_field"])
+      |> group()
+      |> distinct(column: "_field")
+      |> limit(n: 1000)
+      |> sort()`;
 
-          // Extrae los valores después de ",,0,"
-          const values = filteredLines.map((line) =>
-            `measurements.${line.split(',,0,')[1].trim()}`
-          );
-
-          // Crea un array de strings con los valores
-          const arrayOfStrings: string[] = values;
-
-          // console.log(arrayOfStrings); //
-          return arrayOfStrings;
-        }
-        // console.log('Bucket information:', data);
-
-        // return true;
-        return []
-      } else {
-        console.error(
-          'Error fetching bucket information:',
-          response.statusText
-        );
-        return [];
-      }
+      const result = await this.queryApi.collectRows<{ _value: string }>(query);
+      return result.map((row) => row._value);
     } catch (error) {
       console.error('An error occurred:', error);
       return [];
     }
+  }
+
+  async getData(
+    bucket: string,
+    measurement: string,
+    field: string,
+    range: string,
+    yields: string
+  ): Promise<any> {
+    console.log(bucket);
+    console.log(measurement);
+    console.log(field);
+    console.log(range);
+    console.log(yields);
+
+    // const query = `from(bucket: "${bucket}")
+    // |> range(start: -${range})
+    // |> filter(fn: (r) => r["_measurement"] == "${measurement}")
+    // |> filter(fn: (r) => r["_field"] == "${field}")
+    // |> yield(name: ${agregator})`;
+    // console.log('query:', query)
+
+    const query = `from(bucket: "${bucket}")
+  |> range(start: -${range})
+  |> filter(fn: (r) => r["_measurement"] == "${measurement}")
+  |> filter(fn: (r) => r["_field"] == "${field}")
+  |> yield(name: "${yields}")`;
+
+    console.log('query:', query);
+
+    const result = await this.queryApi.collectRows<{ _value: string }>(query);
+
+    // console.log('RESULT: ', result);
+
+    return result;
   }
 }
 

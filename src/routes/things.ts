@@ -1,12 +1,15 @@
 import { Router } from 'express';
-import { getAllMeasurements, getAllFields, getConfig } from '../controllers/thing.controller';
+// import { getAllMeasurements, getAllFields, getConfig } from '../controllers/thing.controller';
+import { getAllMeasurements, getAllFields, getData } from '../controllers/thing.controller';
+
 
 const router = Router();
 
 router
-.get('/measurements/all', getAllMeasurements)
-.get('/fields/all', getAllFields)
-.post('/influxdb/config', getConfig)
+.post('/measurements/all', getAllMeasurements)
+.post('/fields/all', getAllFields)
+.post('/data', getData)
+// .post('/influxdb/config', getConfig)
 // .post('/', create )
 
 

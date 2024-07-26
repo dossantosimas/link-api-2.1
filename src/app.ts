@@ -35,8 +35,8 @@ const port = process.env.PORT || 3001;
 // Habilita CORS para todas las rutass
 app.use(cors());
 
-app.use('/api/v1/config', RouteConfig);
-app.use('/api/v1/buffer', RouteBuffer);
+// app.use('/api/v1/config', RouteConfig);
+// app.use('/api/v1/buffer', RouteBuffer);
 app.use('/api/vs/things', RouterThing)
 
 app.get('/logger', (_, res) => {

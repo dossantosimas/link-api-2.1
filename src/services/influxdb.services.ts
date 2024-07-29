@@ -1,4 +1,4 @@
-import { InfluxDB, QueryApi } from '@influxdata/influxdb-client';
+import { InfluxDB, QueryApi, Point } from '@influxdata/influxdb-client';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -109,19 +109,6 @@ export class InfluxServices {
     range: string,
     yields: string
   ): Promise<any> {
-    console.log(bucket);
-    console.log(measurement);
-    console.log(field);
-    console.log(range);
-    console.log(yields);
-
-    // const query = `from(bucket: "${bucket}")
-    // |> range(start: -${range})
-    // |> filter(fn: (r) => r["_measurement"] == "${measurement}")
-    // |> filter(fn: (r) => r["_field"] == "${field}")
-    // |> yield(name: ${agregator})`;
-    // console.log('query:', query)
-
     const query = `from(bucket: "${bucket}")
   |> range(start: -${range})
   |> filter(fn: (r) => r["_measurement"] == "${measurement}")
@@ -135,6 +122,33 @@ export class InfluxServices {
     // console.log('RESULT: ', result);
 
     return result;
+  }
+
+  async postData(bucket: string, measurement: string, origin: string, type: string, field: string, value: any) {
+    const writeApi = this.influxdb.getWriteApi(this.org, bucket);
+    let point = new Point(measurement).tag('origin', origin)
+
+    if(type === "float"){
+      point.floatField(field, value);
+    } 
+
+    if(type === "string"){
+      point.stringField(field, value)
+    }
+
+    if(type=== "integer"){
+      point.intField(field, value)
+    }
+      
+    console.log(` ${point}`);
+
+    writeApi.writePoint(point);
+
+    writeApi.close().then(() => {
+      console.log('WRITE FINISHED')
+    })
+
+    return true
   }
 }
 

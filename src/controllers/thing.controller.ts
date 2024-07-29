@@ -3,6 +3,7 @@ import { InfluxDBInstance as Influx } from '../services/influxdb.services';
 import { ThingInstance as Thing } from '../services/things.services';
 import { ComandoLocales } from '../services/comandos.services';
 import { IThing } from '../models/thing.model';
+import { influxdbWrite } from '../models/influxdb.model';
 
 export async function getAllMeasurements(req: Request, res: Response) {
   try {
@@ -80,6 +81,36 @@ export async function getData(req: Request, res: Response) {
         success: false,
       });
     }
+  } catch (error) {
+    res.status(500).json({ msg: 'Error en el API', error: error });
+  }
+}
+
+export async function postData(req: Request, res: Response) {
+  try {
+    console.log('LLEGO A POST');
+    const body: influxdbWrite = req.body;
+    console.log('body:', body);
+
+    body.measurement.map(async (m: any) => {
+      console.log('m', m);
+
+      m.fields.map(async (f: any) => {
+        const writetest = await Influx.postData(
+          body.bucket,
+          m.name,
+          m.origin,
+          f.type,
+          f.name,
+          f.value
+        );
+      });
+    });
+
+    res.json({
+      msg: 'Se cargaron los datos',
+      success: true,
+    });
   } catch (error) {
     res.status(500).json({ msg: 'Error en el API', error: error });
   }

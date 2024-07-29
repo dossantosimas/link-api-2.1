@@ -19,18 +19,18 @@ app.use(morganMiddleware);
 
 const port = process.env.PORT || 3001;
 
-// (async () => {
-//   await start_db();
-//   const propiedadService = new PropiedadesSerivices();
+(async () => {
+  await start_db();
+  const propiedadService = new PropiedadesSerivices();
 
-//   const propiedades = await propiedadService.getAll();
-//   console.log('PROPIEDADES: ', propiedades.length);
+  const propiedades = await propiedadService.getAll();
+  console.log('PROPIEDADES: ', propiedades.length);
 
-//   if (propiedades.length === 0) {
-//     const prePropiedades = await propiedadService.preCargaDatos();
-//     console.log('PRE PROPIEDADES: ', prePropiedades);
-//   }
-// })();
+  if (propiedades.length === 0) {
+    const prePropiedades = await propiedadService.preCargaDatos();
+    console.log('PRE PROPIEDADES: ', prePropiedades);
+  }
+})();
 
 // Habilita CORS para todas las rutass
 app.use(cors());

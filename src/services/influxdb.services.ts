@@ -124,6 +124,28 @@ export class InfluxServices {
     return result;
   }
 
+  async getDataRange(bucket: string,
+    measurement: string,
+    field: string,
+    start: string,
+    stop: string,
+    yields: string
+  ): Promise<any> {
+    const query = `from(bucket: "${bucket}")
+  |> range(start: ${start},stop: ${stop})
+  |> filter(fn: (r) => r["_measurement"] == "${measurement}")
+  |> filter(fn: (r) => r["_field"] == "${field}")
+  |> yield(name: "${yields}")`;
+
+    console.log('query:', query);
+
+    const result = await this.queryApi.collectRows<{ _value: string }>(query);
+
+    // console.log('RESULT: ', result);
+
+    return result;
+  }
+
   async postData(bucket: string, measurement: string, origin: string, type: string, field: string, value: any) {
     const writeApi = this.influxdb.getWriteApi(this.org, bucket);
     let point = new Point(measurement).tag('origin', origin)

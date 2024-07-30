@@ -116,6 +116,36 @@ export async function postData(req: Request, res: Response) {
   }
 }
 
+export async function getDataRange(req: Request, res: Response){
+  try {
+    const { bucket, measurement, field, start, stop, yields } = req.body;
+    console.log('--------- QUERY DATA---------');
+
+    if (bucket || measurement || field || start || stop || yields ) {
+      const lista = await Influx.getDataRange(
+        bucket,
+        measurement,
+        field,
+        start,
+        stop,
+        yields
+      );
+      // console.log('LISTA:', lista);
+      res.json({
+        msg: 'Todos los puntos',
+        success: true,
+        measurements: lista,
+      });
+    } else {
+      res.json({
+        msg: 'Falta algun parametro',
+        success: false,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ msg: 'Error en el API', error: error });
+  }
+}
 // export async function getConfig(req: Request, res: Response) {
 //   try {
 //     console.log('--------- TODAS LAS CONFIGURACIONES ---------');

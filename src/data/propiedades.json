@@ -14,5 +14,9 @@
   {
     "propiedad": "Influxdb",
     "valor_propiedad": "link2-colombina"
+  },
+  {
+    "propiedad": "Buffer_intentos",
+    "valor_propiedad": "3"
   }
 ]

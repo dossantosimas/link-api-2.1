@@ -38,7 +38,7 @@ export async function start_db(): Promise<void> {
   try {
     await sequelizeEdge.authenticate();
     await sequelizeThing.authenticate();
-    console.log('Conexión con la base de datos edge establecida con éxito.');
+    console.log('Conexion con la base de datos edge establecida con Exito.');
     await sequelizeEdge.sync();
     await sequelizeThing.sync();
   } catch (error) {

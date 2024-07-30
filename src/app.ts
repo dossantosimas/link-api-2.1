@@ -24,7 +24,7 @@ const port = process.env.PORT || 3001;
   const propiedadService = new PropiedadesSerivices();
 
   const propiedades = await propiedadService.getAll();
-  console.log('PROPIEDADES: ', propiedades.length);
+  console.log('PROPIEDADES: ', propiedades);
 
   if (propiedades.length === 0) {
     const prePropiedades = await propiedadService.preCargaDatos();
@@ -36,7 +36,7 @@ const port = process.env.PORT || 3001;
 app.use(cors());
 
 // app.use('/api/v1/config', RouteConfig);
-// app.use('/api/v1/buffer', RouteBuffer);
+app.use('/api/v1/buffer', RouteBuffer);
 app.use('/api/vs/things', RouterThing)
 
 app.get('/logger', (_, res) => {

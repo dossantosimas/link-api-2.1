@@ -4,6 +4,8 @@ import { BufferInstance as Buffer } from '../services/buffer.services';
 import { ibisaUrls } from '../utils/url';
 
 export async function saveProcess(req: Request, res: Response) {
+  console.log('---------------> Entro a save PROCESS')
+  console.log('---------------> body:', req.body)
   try {
     const { body } = req;
     console.log('saveProcess:', body);
@@ -22,8 +24,12 @@ export async function saveProcess(req: Request, res: Response) {
     }
   } catch (err) {
     if (err instanceof Error) {
+      console.log('---------------> ERROR 1')
+      console.log('---------------> ,', err)
       res.status(500).json({ message: err.message });
     } else {
+      console.log('---------------> ERROR 2')
+      console.log('---------------> ,', err)
       res.status(500).json({ message: 'An unknown error occurred' });
     }
   }
